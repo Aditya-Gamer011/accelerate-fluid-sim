@@ -1,13 +1,8 @@
-// ============================================================
-// FLIP FLUID SIMULATION — FINAL
-// Black Background Version
-// ============================================================
 
-// ---------------- Canvas & WebGL ----------------
 const canvas = document.getElementById("canvas");
 const gl = canvas.getContext("webgl", { alpha: false, antialias: true }) || canvas.getContext("experimental-webgl");
 
-// ---------------- Configuration ----------------
+
 const container = document.getElementById("sim-container");
 
 function resizeCanvas() {
@@ -18,17 +13,17 @@ function resizeCanvas() {
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
-// Physics World Dimensions
+
 const simHeight = 3.0;
 const cScale = canvas.height / simHeight;
 const simWidth = canvas.width / cScale;
 
-// Constants
+
 const SOLID_CELL = 2;
 const FLUID_CELL = 0;
 const AIR_CELL = 1;
 
-// ---------------- TYPES ----------------
+
 const FLUID_TYPES = {
     WATER: { density: 1000, viscosity: 0.0, color: [0.2, 0.6, 1.0] },
     OIL:   { density: 800,  viscosity: 0.05, color: [0.9, 0.8, 0.2] },
@@ -41,12 +36,10 @@ const OBSTACLE_TYPES = {
     LEAF:  { density: 100,  radius: 0.12, color: [0.4, 0.8, 0.4], restitution: 0.1 }
 };
 
-// ---------------- Utility ----------------
+
 function clamp(x, min, max) { return Math.min(Math.max(x, min), max); }
 
-// ============================================================
-// RIGID BODY CLASS (Obstacles)
-// ============================================================
+
 class RigidBody {
     constructor(x, y, typeKey) {
         const type = OBSTACLE_TYPES[typeKey];
@@ -65,7 +58,7 @@ class RigidBody {
         this.vy += gravity * dt;
         this.x += this.vx * dt;
         this.y += this.vy * dt;
-        // Damping
+        
         this.vx *= 0.99;
         this.vy *= 0.99;
     }
@@ -78,9 +71,7 @@ class RigidBody {
     }
 }
 
-// ============================================================
-// FLIP FLUID SOLVER
-// ============================================================
+
 class FlipFluid {
     constructor(density, width, height, spacing, particleRadius, maxParticles) {
         this.density = density;
@@ -108,7 +99,7 @@ class FlipFluid {
         this.particleDensity = new Float32Array(this.fNumCells);
         this.particleRestDensity = 0.0;
 
-        // Init colors
+        
         for (let i = 0; i < this.maxParticles; i++) this.particleColor[3 * i + 2] = 1.0;
 
         this.particleRadius = particleRadius;
@@ -143,7 +134,7 @@ class FlipFluid {
             obs.solveWallCollisions();
         }
 
-        // Obstacle-Obstacle Collisions
+        
         for (let i = 0; i < this.obstacles.length; i++) {
             for (let j = i + 1; j < this.obstacles.length; j++) {
                 const a = this.obstacles[i];
@@ -244,7 +235,7 @@ class FlipFluid {
                             this.particlePos[2 * id] += dx * s;
                             this.particlePos[2 * id + 1] += dy * s;
                             
-                            // Color diffusion
+                            
                             for (let k = 0; k < 3; k++) {
                                 const c0 = this.particleColor[3 * i + k];
                                 const c1 = this.particleColor[3 * id + k];
@@ -269,7 +260,7 @@ class FlipFluid {
             let x = this.particlePos[2 * i];
             let y = this.particlePos[2 * i + 1];
 
-            // 1. Dynamic Obstacles
+            
             for (let obs of this.obstacles) {
                 const dx = x - obs.x;
                 const dy = y - obs.y;
@@ -291,7 +282,7 @@ class FlipFluid {
                     if (vn < 0) {
                         this.particleVel[2*i] -= nx * vn * 1.0;
                         this.particleVel[2*i+1] -= ny * vn * 1.0;
-                        // Buoyancy/Drag push on obstacle
+                        
                         const forceMult = 0.05 * (this.density / obs.density); 
                         obs.vx += nx * vn * forceMult;
                         obs.vy += ny * vn * forceMult;
@@ -299,7 +290,7 @@ class FlipFluid {
                 }
             }
 
-            // 2. Wall Collisions
+            
             if (x < minX) { x = minX; this.particleVel[2 * i] = 0; }
             if (x > maxX) { x = maxX; this.particleVel[2 * i] = 0; }
             if (y < minY) { y = minY; this.particleVel[2 * i + 1] = 0; }
@@ -478,9 +469,7 @@ class FlipFluid {
     }
 }
 
-// ============================================================
-// SCENE SETUP & SHADERS
-// ============================================================
+
 const scene = {
     gravity: -9.81,
     baseGravity: -9.81,
@@ -505,7 +494,7 @@ function setupScene() {
     const res = 80;
     const h = simHeight / res;
     scene.fluid = new FlipFluid(1000, simWidth, simHeight, h, 0.3 * h, 200000);
-    // Walls
+    
     const n = scene.fluid.fNumY;
     for (let i = 0; i < scene.fluid.fNumX; i++) {
         for (let j = 0; j < scene.fluid.fNumY; j++) {
@@ -517,7 +506,7 @@ function setupScene() {
     }
 }
 
-// Shaders
+
 const pointVS = `attribute vec2 aPos; attribute vec3 aCol; uniform vec2 uDom; uniform float uSize; varying vec3 vCol;
 void main() { gl_Position = vec4((aPos/uDom)*2.0-1.0, 0.0, 1.0); gl_PointSize = uSize; vCol = aCol; }`;
 const pointFS = `precision mediump float; varying vec3 vCol;
@@ -548,14 +537,12 @@ function initGL() {
 }
 
 function draw() {
-    // ------------------------------------------------
-    // CRITICAL FIX: CLEAR TO BLACK (0,0,0) NOT WHITE
-    // ------------------------------------------------
+    
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-    // 1. Draw Particles
+    
     if (scene.fluid.numParticles > 0) {
         gl.useProgram(pProg);
         gl.uniform2f(gl.getUniformLocation(pProg, "uDom"), simWidth, simHeight);
@@ -576,12 +563,12 @@ function draw() {
         gl.drawArrays(gl.POINTS, 0, scene.fluid.numParticles);
     }
 
-    // 2. Draw Obstacles (Independent of particles)
+    
     if (scene.fluid.obstacles.length > 0) {
         gl.useProgram(oProg);
         gl.uniform2f(gl.getUniformLocation(oProg, "uDom"), simWidth, simHeight);
         const opLoc = gl.getAttribLocation(oProg, "aPos");
-        gl.bindBuffer(gl.ARRAY_BUFFER, obsBuf); // Reuse or own buffer
+        gl.bindBuffer(gl.ARRAY_BUFFER, obsBuf); 
         gl.enableVertexAttribArray(opLoc);
 
         for (let obs of scene.fluid.obstacles) {
@@ -595,13 +582,11 @@ function draw() {
     }
 }
 
-// ============================================================
-// UI & INTERACTION
-// ============================================================
+
 setupScene();
 initGL();
 
-// Toggles
+
 const injectToggle = document.getElementById("injectToggle");
 if (injectToggle) {
     injectToggle.addEventListener("change", e => {
@@ -614,13 +599,13 @@ if (injectToggle) {
     });
 }
 
-// Fluid Select
+
 const fluidSelect = document.querySelector("select");
 if (fluidSelect) {
     fluidSelect.addEventListener("change", e => scene.selectedFluid = e.target.value.toUpperCase());
 }
 
-// Gravity
+
 const gravSlider = document.querySelector("input[type=range]");
 if (gravSlider) {
     gravSlider.addEventListener("input", e => {
@@ -629,7 +614,7 @@ if (gravSlider) {
     });
 }
 
-// Add Obstacle
+
 const obsBtn = document.querySelector(".section button:nth-of-type(1)");
 if (obsBtn) {
     obsBtn.addEventListener("click", () => {
@@ -639,7 +624,7 @@ if (obsBtn) {
     });
 }
 
-// Clear
+
 const clearBtn = document.getElementById("clearBtn");
 if (clearBtn) {
     clearBtn.addEventListener("click", () => {
@@ -648,7 +633,7 @@ if (clearBtn) {
     });
 }
 
-// Mouse Tracking
+
 function getSimCoords(clientX, clientY) {
     const rect = canvas.getBoundingClientRect();
     const x = (clientX - rect.left) / cScale;
@@ -660,7 +645,7 @@ canvas.addEventListener("mousedown", e => {
     scene.mouseDown = true;
     const c = getSimCoords(e.clientX, e.clientY);
     scene.mouseX = c.x; scene.mouseY = c.y;
-    interact(); // Instant interaction on click
+    interact(); 
 });
 canvas.addEventListener("mouseup", () => scene.mouseDown = false);
 canvas.addEventListener("mouseleave", () => scene.mouseDown = false);
@@ -685,7 +670,7 @@ function interact() {
     const y = scene.mouseY;
     if (scene.mode === "inject") {
         const type = FLUID_TYPES[scene.selectedFluid];
-        // Inject fewer particles per frame, but continuous
+        
         for(let i=0; i<3; i++) {
             if(scene.fluid.numParticles >= scene.fluid.maxParticles) break;
             const id = scene.fluid.numParticles++;
@@ -696,7 +681,7 @@ function interact() {
             scene.fluid.particleVel[2*id] = (Math.random()-0.5);
             scene.fluid.particleVel[2*id+1] = -1.5;
             
-            // Jitter Color
+           
             scene.fluid.particleColor[3*id] = type.color[0] + (Math.random()-0.5)*0.1;
             scene.fluid.particleColor[3*id+1] = type.color[1] + (Math.random()-0.5)*0.1;
             scene.fluid.particleColor[3*id+2] = type.color[2] + (Math.random()-0.5)*0.1;
@@ -708,9 +693,9 @@ function interact() {
     }
 }
 
-// Loop
+
 function update() {
-    if (scene.mouseDown) interact(); // Continuous interaction
+    if (scene.mouseDown) interact(); 
 
     if (!scene.paused) {
         scene.fluid.simulate(scene.dt, scene.gravity, scene.flipRatio, scene.numPressureIters, scene.numParticleIters, scene.overRelaxation, scene.compensateDrift, scene.separateParticles);
