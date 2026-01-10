@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Accelerate — Advanced Fluid Lab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <div id="app">
+
+    <div id="control-bar">
+
+      <div class="section">
+        <span class="title" id="mode-label">INJECT</span>
+        <label class="toggle">
+          <input type="checkbox" id="injectToggle" checked />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="section">
+        <span class="title">Fluid</span>
+        <select id="fluidSelect">
+          <option value="WATER">Water</option>
+          <option value="OIL">Oil</option>
+          <option value="HONEY">Honey</option>
+        </select>
+      </div>
+
+      <div class="section">
+        <span class="title">Gravity</span>
+        <div class="range-wrapper">
+          <input type="range" min="-100" max="100" value="100" step="5" />
+        </div>
+      </div>
+
+      <div class="section">
+        <button id="addObstacleBtn">Add Obstacle</button>
+        <button id="clearBtn" class="danger">Clear</button>
+      </div>
+
+    </div>
+
+    <div id="sim-container">
+      <div class="grid-overlay"></div>
+      <canvas id="canvas"></canvas>
+    </div>
+
+    <div class="footer-hint">
+      <p>Left Click to interact • Use Gravity slider to reverse physics • Honey is viscous, Oil is light</p>
+    </div>
+
+  </div>
+
+  <script src="sim.js"></script>
+
+</body>
+</html>

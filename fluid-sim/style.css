@@ -1,0 +1,330 @@
+/* =====================================
+   1. GLOBAL RESET & BASE
+===================================== */
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  /* Clean, scientific background */
+  background: #f3f4f6;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #374151;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 5vh;
+}
+
+/* =====================================
+   2. APP WRAPPER
+===================================== */
+#app {
+  width: 100%;
+  max-width: 850px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 0 20px;
+}
+
+/* =====================================
+   3. CONTROL BAR
+===================================== */
+#control-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+
+  padding: 14px 28px;
+  background: #ffffff;
+  border-radius: 16px;
+  
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.05), 
+    0 10px 15px -3px rgba(0, 0, 0, 0.03),
+    inset 0 0 0 1px rgba(0,0,0,0.03);
+}
+
+.section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+/* Label Typography */
+.section .title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-right: 4px;
+  min-width: 50px;
+  text-align: right;
+  transition: color 0.2s;
+}
+
+/* Dynamic Label Coloring */
+#mode-label {
+  color: #2563eb; /* Blue default */
+}
+
+/* =====================================
+   4. TOGGLE SWITCH (INJECT / SUCK)
+===================================== */
+.toggle {
+  position: relative;
+  width: 48px;
+  height: 26px;
+  cursor: pointer;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle .slider {
+  position: absolute;
+  inset: 0;
+  background-color: #ef4444; /* SUCK (Red) */
+  border-radius: 99px;
+  transition: .3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+}
+
+.toggle .slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: .3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Checked = INJECT (Blue) */
+.toggle input:checked + .slider {
+  background-color: #2563eb;
+}
+
+.toggle input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+/* =====================================
+   5. DROPDOWN (FLUID SELECTOR)
+===================================== */
+select {
+  appearance: none;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 6px 32px 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  
+  /* Custom Arrow */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 14px;
+}
+
+select:hover {
+  border-color: #d1d5db;
+  background-color: #f3f4f6;
+}
+
+select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.1);
+}
+
+/* =====================================
+   6. GRAVITY SLIDER (-100 to 100)
+===================================== */
+.range-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Center tick mark visual cue */
+.range-wrapper::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  bottom: -4px;
+  width: 1px;
+  background: #d1d5db;
+  z-index: 0;
+  pointer-events: none;
+}
+
+input[type=range] {
+  width: 120px;
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 3px;
+  outline: none;
+  z-index: 1; /* Above tick mark */
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  border-color: #9ca3af;
+}
+
+/* =====================================
+   7. BUTTONS
+===================================== */
+button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #374151;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+button:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Clear Button Specifics */
+button.danger {
+  color: #dc2626;
+  border-color: #fee2e2;
+  background: #fef2f2;
+}
+
+button.danger:hover {
+  background: #fee2e2;
+  border-color: #fecaca;
+}
+
+/* =====================================
+   8. SIMULATION TANK (The Rectangle)
+===================================== */
+#sim-container {
+  position: relative;
+  
+  /* Reduced size as requested */
+  width: 640px;
+  height: 380px;
+
+  background: #000000;
+  border-radius: 8px;
+  border: 1px solid #000000;
+  
+  /* Deep shadow for depth */
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.1), 
+    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(0,0,0,0.02); /* Crisp edge */
+    
+  overflow: hidden;
+  cursor: crosshair;
+}
+
+/* Canvas fills the tank */
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Subtle grid overlay - REMOVED */
+.grid-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: transparent;
+}
+
+/* =====================================
+   9. FOOTER
+===================================== */
+.footer-hint {
+  margin-top: -10px;
+  font-size: 12px;
+  color: #9ca3af;
+  text-align: center;
+}
+
+/* 2. Better Button Interactions (Tactile feel) */
+button {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-color: #d1d5db;
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  background-color: #f3f4f6;
+}
+
+/* 4. The Gravity Slider - Make it look modern */
+input[type=range] {
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* 5. The Toggle Switch (Inject/Suck) */
+.toggle .slider {
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); /* Deepen the track */
+}
+.toggle .slider::before {
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* Pop the knob */
+}
