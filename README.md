@@ -3,7 +3,7 @@
 
 # Accelerate-- Fluid Simulator
 
-**Accelerate Fluid Simulator** is a high-performance, interactive fluid dynamics simulator built for Hack Club Accelerate, that runs natively in your web browser. Built with raw **WebGL** and **Vanilla JavaScript**, it uses a hybrid **FLIP (Fluid Implicit Particle)** solver to deliver realistic, real-time liquid physics.
+**Accelerate Fluid Simulator** is a high-performance, interactive fluid dynamics simulator built for Hack Club, that runs natively in your web browser. Built with raw **WebGL** and **Vanilla JavaScript**, it uses a hybrid **FLIP (Fluid Implicit Particle)** solver to deliver realistic, real-time liquid physics.
 
 This isn't just a visual toy-- it's a physics sandbox where different fluids (like honey and oil) interact with rigid bodies (like stones and wood) in a scientifically plausible way.
 
