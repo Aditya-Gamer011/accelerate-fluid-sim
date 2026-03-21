@@ -3,62 +3,18 @@
 
 # Accelerate-- Fluid Simulator
 
-**Accelerate Fluid Simulator** is a high-performance, interactive fluid dynamics simulator built for Hack Club, that runs natively in your web browser. Built with raw **WebGL** and **Vanilla JavaScript**, it uses a hybrid **FLIP (Fluid Implicit Particle)** solver to deliver realistic, real-time liquid physics.
+This is a fluid physics simulator I built to observe how different fluids interact with each other and certain obstacles- such as leaves, logs, and stones, under different settings on gravity.
 
-This isn't just a visual toy-- it's a physics sandbox where different fluids (like honey and oil) interact with rigid bodies (like stones and wood) in a scientifically plausible way.
+It includes a set of 3 fluids- water, oil and honey. 
 
-##Key Features
+Hold the left mouse button in the canvas while on inject mode to insert the liquid. Do the same on suck mode to remove the liquid. 
 
-* **High-Performance Solver:** Simulates up to 150,000 particles at 60 FPS using a custom WebGL renderer.
-* **Multi-Material Physics:**
-* **Water:** Standard density and low viscosity.
-* **Oil:** Lighter than water (floats) with medium viscosity.
-* **Honey:** Heavy, high-viscosity fluid that coils and stacks.
+Click on the add obstacle button to insert one of 3 different obstacles at random: Leaf (green), Log (brown), Stone (gray)
 
+Use the gravity slider to adjust gravity levels for all entities.
 
-* **Dynamic Obstacles:**
-* Includes distinct Rigid Bodies: **Stones** (sink), **Logs** (float), and **Leaves** (rest on surface).
-* Features two-way coupling: Fluids push objects, and objects displace fluids.
+It uses the FLIP solver concept. It can be understood in detail here: https://matthias-research.github.io/pages/tenMinutePhysics/
+
+ps.- the reason different liquids fall with different speeds is because I imagine them flowing down from a black slate, instead of free-fall in space.
 
 
-* **Interactive Controls:**
-* **Inject Mode:** Paint fluid directly into the tank with your mouse.
-* **Suction Mode:** Remove particles to clean up the canvas.
-* **Variable Gravity:** A slider that lets you go from Zero G to Hyper-Gravity, or even **reverse gravity** entirely.
-
-
-* **Sleek UI:** A polished, laboratory aesthetic with a minimal glass-morphism interface.
-
-## How to Run
-
-No installation, build steps, or servers required!
-
-1. Download the project files (`index.html`, `style.css`, `sim.js`).
-2. Open `index.html` in any modern web browser (Chrome, Firefox, Edge, Safari).
-3. Start simulating!
-
-## Controls
-
-| Control | Action |
-| --- | --- |
-| **Left Click + Drag** | Inject fluid (or Suck fluid, depending on mode). |
-| **Toggle Switch** | Switch between **INJECT** (Blue) and **SUCK** (Red) modes. |
-| **Fluid Dropdown** | Select the material to inject (Water / Oil / Honey). |
-| **Gravity Slider** | Adjust gravity force. Center is 0g, Right is 1g, Left is Reverse Gravity. |
-| **Add Obstacle** | Spawns a random rigid body (Stone, Log, or Leaf) into the tank. |
-| **Clear Button** | Instantly removes all particles and obstacles. |
-
-## Tech Stack
-
-* **Core:** HTML5, CSS3
-* **Logic:** Vanilla JavaScript (ES6+)
-* **Rendering:** WebGL 1.0 (Custom shaders for high-performance point rendering)
-* **Physics:** Custom FLIP/PIC implementation with rigid body collision resolution.
-
-## Credits & Inspiration
-
-* Core FLIP solver concepts adapted from **Matthias Müller's [Ten Minute Physics**](https://matthias-research.github.io/pages/tenMinutePhysics/).
-
----
-
-*Enjoy the flow! 💧*
